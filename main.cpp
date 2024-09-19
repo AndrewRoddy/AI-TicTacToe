@@ -13,11 +13,14 @@ void printCoords(int move);
 int main() {
     char player = 'X';
     int move = -1;
-    drawBoard();
-    cout << endl << "Player " << player << " turn: " << endl;
-    cin >> move;
-    makeMove(move, player);
-    drawBoard();
+    bool running = true;
+    while (running = true){
+        drawBoard();
+        cout << endl << "Player " << player << " turn: " << endl;
+        cin >> move;
+        makeMove(move, player);
+        player = (player == 'X') ? 'O' : 'X'; // If X make O if O make X
+    }
 }
 
 // Draws a TicTacToe board
