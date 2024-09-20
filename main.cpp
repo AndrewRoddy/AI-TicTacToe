@@ -4,21 +4,19 @@
 using std::cout; using std::cin; using std::endl;
 using std::vector;
 
-vector <vector <char> > board = {{'1','2','3'},{'4','5','6'},{'7','8','9'}};
-
 void drawBoard();
-void makeMove(int move, char player);
+void makeMove(char player);
 void printCoords(int move);
 
+vector <vector <char> > board = {{'1','2','3'},{'4','5','6'},{'7','8','9'}};
+
 int main() {
-    char player = 'X';
-    int move = -1;
-    bool running = true;
+    char player; int move; bool running;
+    player = 'X';
+    running = true;
     while (running = true){
         drawBoard();
-        cout << endl << "Player " << player << " turn: " << endl;
-        cin >> move;
-        makeMove(move, player);
+        makeMove(player);
         player = (player == 'X') ? 'O' : 'X'; // If X make O if O make X
     }
 }
@@ -36,17 +34,25 @@ void drawBoard() {
     }
 }
 
-void makeMove(int move, char player){
-    int col = (int) ((move-1)/3);
-    int row = (move-1) % 3;
-    if (move >= 1 && move <= 9){
-        if(board[col][row] == 'X' || board[col][row] == 'O'){
-            cout << "You can't move there!" << endl;
+void makeMove(char player){
+    while(true){
+        int move;
+        cout << endl << "Player " << player << " turn: ";
+        cin >> move;
+        int col = (int) ((move-1)/3);
+        int row = (move-1) % 3;
+        if (move >= 1 && move <= 9){
+            if(board[col][row] == 'X' || board[col][row] == 'O'){
+                drawBoard();
+                cout << endl << "You can't move there!" << endl;
+            } else {
+                board[col][row] = player;
+                return;
+            }
         } else {
-            board[col][row] = player;
+            drawBoard();
+            cout << endl << "You can't move there!" << endl;
         }
-    } else {
-        cout << "You can't move there!" << endl;
     }
 }
 
