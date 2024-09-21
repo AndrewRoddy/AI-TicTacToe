@@ -8,23 +8,27 @@ void drawBoard();
 void makeMove(char player);
 void printCoords(int move);
 char winCheck();
+bool playAgain();
+void reset(char& player, char &winner);
 
 vector <vector <char> > board = {{'1','2','3'},{'4','5','6'},{'7','8','9'}};
 
 int main() {
-    char player; int move; bool running; char winner = '-';
-    player = 'X';
-    running = true;
-    while (running = true){
+    int move;
+    bool running = true;
+    char player = 'X';
+    char winner = '-';
+    while (running == true){
         drawBoard();
         makeMove(player);
         winner = winCheck();
+        player = (player == 'X') ? 'O' : 'X'; // If X make O if O make X
         if (winner != '-'){
             drawBoard();
             cout << winner << " Wins!!";
-            break;
+            reset(player, winner);
+            running = playAgain();
         }
-        player = (player == 'X') ? 'O' : 'X'; // If X make O if O make X
     }
 }
 
@@ -39,7 +43,7 @@ void drawBoard() {
             cout << endl << "-- - - - --" << endl;
         }
     }
-    cout << endl;
+    cout << endl << endl;
 }
 
 void makeMove(char player){
@@ -73,6 +77,31 @@ char winCheck(){
     
     return '-';
 }
+
+bool playAgain(){
+    char again;
+    while(true){
+        cout << "Would you like to play again?\nY: Yes\nN: No\n";
+        cin >> again;
+        switch (again){
+            case 'Y':
+            case 'y':
+                return true;
+            case 'N':
+            case 'n':
+                return false;
+            default:
+                cout << "Not a valud response, Try again";
+        }
+    }
+}
+
+void reset(char& player, char &winner){
+    board = {{'1','2','3'},{'4','5','6'},{'7','8','9'}};
+    player = 'X';
+    winner = '-';
+}
+
 
 void printCoords(int move){
     cout << '(' << (int) ((move-1)/3); // X Coordinate
