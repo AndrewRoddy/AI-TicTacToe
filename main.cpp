@@ -7,16 +7,23 @@ using std::vector;
 void drawBoard();
 void makeMove(char player);
 void printCoords(int move);
+char winCheck();
 
 vector <vector <char> > board = {{'1','2','3'},{'4','5','6'},{'7','8','9'}};
 
 int main() {
-    char player; int move; bool running;
+    char player; int move; bool running; char winner = '-';
     player = 'X';
     running = true;
     while (running = true){
         drawBoard();
         makeMove(player);
+        winner = winCheck();
+        if (winner != '-'){
+            drawBoard();
+            cout << winner << " Wins!!";
+            break;
+        }
         player = (player == 'X') ? 'O' : 'X'; // If X make O if O make X
     }
 }
@@ -32,28 +39,39 @@ void drawBoard() {
             cout << endl << "-- - - - --" << endl;
         }
     }
+    cout << endl;
 }
 
 void makeMove(char player){
+    int move, col, row;
     while(true){
-        int move;
-        cout << endl << "Player " << player << " turn: ";
+        cout << "Player " << player << " turn: ";
         cin >> move;
-        int col = (int) ((move-1)/3);
-        int row = (move-1) % 3;
-        if (move >= 1 && move <= 9){
-            if(board[col][row] == 'X' || board[col][row] == 'O'){
-                drawBoard();
-                cout << endl << "You can't move there!" << endl;
-            } else {
-                board[col][row] = player;
-                return;
-            }
-        } else {
-            drawBoard();
-            cout << endl << "You can't move there!" << endl;
-        }
+        col = (int) ((move-1)/3);
+        row = (move-1) % 3;
+        if (move < 1 || move > 9){continue;} // If move not within limit, try again
+        if(board[col][row] == 'X' || board[col][row] == 'O'){continue;} // If square taken, try again
+        board[col][row] = player; // Make the move
+        break;
     }
+}
+
+char winCheck(){
+    char players[2] = {'X', 'O'};
+    for(int q = 0; q < 2; q++){
+        for(int i = 0; i < 3; i++){
+            if( // Checks for Across and Down
+                (board[0][i] == players[q] && board[1][i] == players[q] && board[2][i] == players[q]) ||
+                (board[i][0] == players[q] && board[i][1] == players[q] && board[i][2] == players[q])   
+            ){return players[q];}
+        }
+        if( // Checks for Diagnols
+            (board[0][0] == players[q] && board[1][1] == players[q] && board[2][2] == players[q]) ||
+            (board[0][2] == players[q] && board[1][1] == players[q] && board[2][0] == players[q])
+        ){return players[q];}
+    }
+    
+    return '-';
 }
 
 void printCoords(int move){
@@ -61,10 +79,4 @@ void printCoords(int move){
     cout << ',';
     cout << (move-1) % 3 << ')'; // Y Coordinate
 }
-
-// Personal Notes
-/*
- - Make sure to include <vector> and std::vector or using std::vector.
- - 2D Vectors are generated using vector<vector<type>> var = {{},{},{}};
-*/
 
